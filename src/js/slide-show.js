@@ -1,22 +1,17 @@
 var slideShow = (function(exports) {
   'use strict';
 
-  // setup module exports
   var exports = {};
 
-  // setup slides
   let currentIndex = 0;
   let useAnchors = false;
   const nav = document.querySelectorAll('.slide-show__nav a');
   const slides = [];
 
   for (const key of Object.keys(nav)) {
-    // create slide object
     slides[key] = {};
-    // add slides
     slides[key].id = nav[key].getAttribute('href');
     slides[key].tl = new TimelineMax();
-    // add click events to nav elements
     const navElement = document.querySelector(`.slide-show__nav a[href="${slides[key].id}"]`);
     navElement.addEventListener('click', event => {
       event.preventDefault();
@@ -25,7 +20,6 @@ var slideShow = (function(exports) {
     });
   }
 
-  // set z-index for slides
   let totalSlides = slides.length;
 
   for (let i = 0; i < totalSlides; i++) {
@@ -33,17 +27,14 @@ var slideShow = (function(exports) {
     slide.style.zIndex = totalSlides - i;
   }
 
-  // fade in slide show
   const cloak = document.querySelector('.slide-show__cloak');
   cloak.style.visibility = 'visible';
   cloak.style.opacity = 1;
 
-  // returns slide id
   function slideId(index) {
     return slides[index].id;
   }
 
-  // returns slide index
   function slideIndex(slide) {
     for (let i = 0; i < totalSlides; i++) {
       if (slide === slides[i].id) {
@@ -52,7 +43,6 @@ var slideShow = (function(exports) {
     }
   }
 
-  // set active class on nav
   function activeNav(slide) {
     for (const key of Object.keys(nav)) {
       const navElement = document.querySelector('.slide-show__nav a[href="' + slides[key].id + '"]');
@@ -65,10 +55,8 @@ var slideShow = (function(exports) {
     }
   }
 
-  // set default slide on nav
   activeNav(slides[currentIndex].id);
 
-  // animate slide, pause all other slides
   function animateSlide(index) {
     for (const slide of slides) {
       slide.tl.pause();
@@ -76,18 +64,14 @@ var slideShow = (function(exports) {
     slides[index].tl.restart();
   }
 
-  // scroll to selected slide
   function scrollTo(newSlide) {
-    // newSlide can be string or number
     let newIndex;
     if (typeof newSlide === 'string') {
       newIndex = slideIndex(newSlide)
     } else {
       newIndex = newSlide;
     }
-    // cancel if already on slide
     if (currentIndex === newIndex) { return; }
-    // show the new slide
     for (let i = 0; i < totalSlides; i++) {
       const slide = document.querySelector(`.slide-show__slides section[data-id="${slides[i].id}"]`);
       if (i === newIndex) {
@@ -104,7 +88,6 @@ var slideShow = (function(exports) {
     }
   }
 
-  // scroll to previous slide
   function prevSlide() {
     if (currentIndex > 0) {
       scrollTo(currentIndex - 1);
